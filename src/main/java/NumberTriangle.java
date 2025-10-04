@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -89,6 +90,10 @@ public class NumberTriangle {
      */
     public int retrieve(String path) {
         // TODO implement this method
+        if (path.equals("")) return this.root;
+        if (path.charAt(0) == 'r') return this.right.retrieve(path.substring(1));
+        else if (path.charAt(0) == 'l') return this.left.retrieve(path.substring(1));
+
         return -1;
     }
 
@@ -111,6 +116,8 @@ public class NumberTriangle {
 
 
         // TODO define any variables that you want to use to store things
+        ArrayList<ArrayList<NumberTriangle>> tree = new ArrayList<>();
+        int row = 0;
 
         // will need to return the top of the NumberTriangle,
         // so might want a variable for that.
@@ -123,6 +130,25 @@ public class NumberTriangle {
             System.out.println(line);
 
             // TODO process the line
+            String[] ints = line.split(" ");
+            ArrayList<NumberTriangle> list = new ArrayList<>();
+            for (int i = 0; i < ints.length; i++) {
+                if (top == null) {
+                    top = new NumberTriangle(Integer.parseInt(ints[i]));
+                    list.add(top);
+                } else {
+                    NumberTriangle curr = new NumberTriangle(Integer.parseInt(ints[i]));
+                    list.add(curr);
+                    if (i < ints.length - 1) {
+                        tree.get(row - 1).get(i).setLeft(curr);
+                    }
+                    if (i > 0) {
+                        tree.get(row - 1).get(i - 1).setRight(curr);
+                    }
+                }
+            }
+            tree.add(list);
+            row++;
 
             //read the next line
             line = br.readLine();
